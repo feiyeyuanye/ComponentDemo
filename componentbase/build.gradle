@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion compile_sdk_version.toInteger()
+
+    defaultConfig {
+        minSdkVersion min_sdk_version.toInteger()
+        targetSdkVersion target_sdk_version.toInteger()
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // support_version 的值位于 Application 中的 gradle.properties 文件中设置
+    // gradle版本3.0.0版本以后；api 等同于 compile。
+    // api 与 implementation 的区别在于；
+    // 1. api 会将依赖暴露出去，而 implementation 则将依赖隐藏在内部。
+    // 2. implementation 还会使编译速度有所增快
+    // 3. 一般优先使用implementation，但这里使用会导致其他依赖base的组件无法访问到这个依赖。
+    // 本来想一起放到base里，但fragment导包需要这个依赖。（android.support.v4.app.）
+    api "com.android.support:appcompat-v7:$support_version"
+}

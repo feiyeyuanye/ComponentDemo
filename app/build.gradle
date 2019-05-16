@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    // compile_sdk_version等值，在Application下的gradle.properties文件中配置。
+    // 编译的SDK版本
+    compileSdkVersion compile_sdk_version.toInteger()
+    // 构建工具的版本，其中包括了打包工具aapt、dx等,如API20对应的build-tool的版本就是20.0.0
+    // buildToolsVersion = "26.0.0"
+    defaultConfig {
+        applicationId "com.example.myapplication"
+        // 兼容的最低 SDK 版本
+        minSdkVersion min_sdk_version.toInteger()
+        //向前兼容，保存新旧两种逻辑，并通过 if-else 方法来判断执行哪种逻辑
+        targetSdkVersion target_sdk_version.toInteger()
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // alibaba Arouter
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ moduleName : project.getName() ]
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // 依赖base
+    implementation project(':base')
+    // runtimeOnly,只有在打包过程中才能直接引用组件中的类，在开发阶段，所有组件中的类都是不可以访问的。
+    runtimeOnly project(':login')
+    runtimeOnly project(':share')
+
+    // alibaba Arouter
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+}
